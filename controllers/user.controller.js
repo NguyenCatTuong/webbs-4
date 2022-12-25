@@ -1,4 +1,9 @@
 const axiosInstance = require("../configs/axiosInstance");
+const { hashPassword } = require('../helper/index')
+const { getToken } = require('../helper/shop.helper')
+const LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
+
 
 module.exports = {
     signUp: async (req, res, next) => {
@@ -30,23 +35,38 @@ module.exports = {
     },
 
     login: (req, res, next) => {
-        res.render('signIn')
+        if (getToken()) {
+            res.redirect('/product')
+        } else {
+            res.render('signIn')
+        }
     },
 
     postLogin: async (req, res, next) => {
         try {
-            const rs = await axiosInstance.get('/login', {data : req.body})
-            console.log(rs.data.msg);
-            if(rs.data.msg === 'success'){ 
+            const rs = await axiosInstance.post('/login', req.body)
+            if (rs.status === 200) {
+                const { token } = rs.data;
+                localStorage.setItem('accessToken', token);
+                localStorage.setItem('username', req.body.username);
                 res.redirect('/product')
-            } else {
-                res.render('signIn', {
-                    type: 'danger',
-                    message: rs.data.msg
-                })
             }
         } catch (error) {
-            next(error);
+            res.render('signIn', {
+                type: 'danger',
+                message: error.response.data.msg
+            })
         }
-    }
+    },
+
+    logOut: async (req, res) => {
+        try {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('username');
+            return res.redirect('/login');
+        } catch (error) {
+            console.error('POST LOGOUT ERROR: ', error);
+            return res.render('errorPage');
+        }
+    },
 }

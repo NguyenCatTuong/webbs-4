@@ -1,6 +1,8 @@
 require('dotenv').config();
 const axios = require('axios');
 const https = require('https');
+const { getToken } = require('../helper/shop.helper');
+
 const axiosInstance = axios.create({
     baseURL: process.env.AUTH_URL,
     headers: { 'Content-Type': 'application/json' },

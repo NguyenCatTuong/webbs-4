@@ -1,6 +1,7 @@
 const userModel = require('../models/user.model')
-const hashPassword = require('../helper/index')
+const { hashPassword }= require('../helper/index')
 const bcrypt = require('bcryptjs');
+const jwtConfig = require('../configs/jwt.config')
 
 module.exports = {
     signUp: async (req, res, next) => {
@@ -27,29 +28,23 @@ module.exports = {
                 const newId = isUserIdExist?.UserID + 1 || 1;
                 const hashPass = await hashPassword(pass)
                 await userModel.add({ id: newId, username, pass: hashPass, fullname, address })
-                res.redirect('http://localhost:18644/shop');
+                res.redirect('http://localhost:18644/login');
             }
     },
 
-    login: async (req, res, next) => {
-        const { username, pass, isRemember } = req.body;
+    postLogin: async (req, res, next) => {
+        const { username, pass } = req.body;
         const user = await userModel.getUser(username)
         const isMatch = await bcrypt.compare(pass, user?.Password || '');
         if (user?.Username === username && isMatch) {
-            req.session = {
-                username: username,
-                userId: user.id,
-            };
-            if (isRemember) {
-                res.cookie('un', user.f_Username, {
-                    signed: true,
-                    httpOnly: true,
-                    maxAge: 86400 * 1000,
-                });
-            }
-            res.json({"msg" : "success"});
+            const token = await jwtConfig.encodedToken({
+                userName: username,
+                userID: user.UserID,
+            });
+            return res.status(200).json({ token });
+            // res.json({ "msg": "success" });
         } else {
-            res.json({"msg" : "Tài khoản hoặc mật khẩu không đúng   "});
+            res.status(400).json({ "msg": "Tài khoản hoặc mật khẩu không đúng" });
         }
     }
 }

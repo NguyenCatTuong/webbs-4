@@ -5,6 +5,11 @@ const path = require('path');
 const https = require('https');
 const axiosInstance = require('./configs/axiosInstance');
 const route = require('./routes/index.shop.route');
+const { verifyToken } = require('./configs/jwt.config');
+const { getToken } = require('./helper/shop.helper');
+const session = require('express-session');
+const LocalStorage = require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 
 require('dotenv').config()
 
@@ -15,6 +20,20 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.json());
+
+// session
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET || 'secret',
+		resave: false,
+		saveUninitialized: true,
+	}),
+);
+
+app.use((req, res, next) => {
+	res.locals.currentUser = localStorage.getItem('username');
+	next()
+})
 
 // Static file
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,8 +50,6 @@ app.get('/shop', async (req, res) => {
     res.json(rs.data)
 });
 
-//Db
-// connect();
 
 app.listen(port, () => {
     console.log(`Example app listening on port http://localhost:${port}`)

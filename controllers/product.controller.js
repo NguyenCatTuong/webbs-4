@@ -12,7 +12,6 @@ module.exports = {
     },
     getList: async (req, res, next) => {
         const { category } = req.body;
-        console.log(req.body);
         const categories = await categoryModel.getCategoryName()
         const rs = await productModel.getProductByCategory(category)
         if (rs) {
