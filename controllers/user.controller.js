@@ -1,6 +1,4 @@
-const userModel = require('../models/user.model')
-const hashPassword = require('../helper/index')
-const bcrypt = require('bcryptjs');
+const axiosInstance = require("../configs/axiosInstance");
 
 module.exports = {
     signUp: async (req, res, next) => {
@@ -31,25 +29,24 @@ module.exports = {
             }
     },
 
-    login: async (req, res, next) => {
-        const { username, pass, isRemember } = req.body;
-        const user = await userModel.getUser(username)
-        const isMatch = await bcrypt.compare(pass, user?.Password || '');
-        if (user?.Username === username && isMatch) {
-            req.session = {
-                username: username,
-                userId: user.id,
-            };
-            if (isRemember) {
-                res.cookie('un', user.f_Username, {
-                    signed: true,
-                    httpOnly: true,
-                    maxAge: 86400 * 1000,
-                });
+    login: (req, res, next) => {
+        res.render('signIn')
+    },
+
+    postLogin: async (req, res, next) => {
+        try {
+            const rs = await axiosInstance.get('/login', {data : req.body})
+            console.log(rs.data.msg);
+            if(rs.data.msg === 'success'){ 
+                res.redirect('/shop')
+            } else {
+                res.render('signIn', {
+                    type: 'danger',
+                    message: rs.data.msg
+                })
             }
-            res.json({"msg" : "success"});
-        } else {
-            res.json({"msg" : "Tài khoản hoặc mật khẩu không đúng   "});
+        } catch (error) {
+            next(error);
         }
     }
 }

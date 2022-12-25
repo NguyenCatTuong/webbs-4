@@ -8,7 +8,6 @@ module.exports = {
 
     getGreatestUserID: async () => {
         const rs = await db.oneOrNone('SELECT "UserID" FROM public."Users" ORDER BY "UserID" DESC LIMIT 1');
-        console.log(rs);
         return rs;
     },
 

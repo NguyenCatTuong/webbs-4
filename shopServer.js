@@ -4,8 +4,7 @@ const { engine } = require('express-handlebars');
 const path = require('path');
 const https = require('https');
 const axiosInstance = require('./configs/axiosInstance');
-// const route = require('./routes');
-// const { db, connect } = require('./configs/db');
+const route = require('./routes/index.shop.route');
 
 require('dotenv').config()
 
@@ -25,8 +24,8 @@ app.engine('.hbs', engine({ extname: '.hbs' }));
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, './views'));
 
-//route
-// route(app);
+// route
+route(app);
 app.get('/shop', async (req, res) => {
     const rs = await axiosInstance.get('/auth')
     res.json(rs.data)
