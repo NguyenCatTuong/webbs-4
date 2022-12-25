@@ -1,0 +1,33 @@
+<div class="row m-2">
+    <div class="col-12">
+        <form method="POST" action="/product" class="category-form d-flex">
+            <select name="category" class="form-select" aria-label="Default select example">
+                <option value="all" selected>--- Chọn loại sản phẩm ---</option>
+                {{#each categories}}
+                <option value="{{CategoryName}}">{{CategoryName}}</option>
+                {{/each}}
+            </select>
+            <button type="submit" class="btn btn-primary mt-4 btn-filter">Lọc</button>
+        </form>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Unit In Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each productList}}
+        <tr>
+            <th scope="row">{{@index}}</th>
+            <td>{{this.ProductName}}</td>
+            <td>{{this.UnitPrice}}</td>
+            <td>{{this.UnitsInStock}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

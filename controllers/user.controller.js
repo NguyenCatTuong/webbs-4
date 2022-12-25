@@ -38,7 +38,7 @@ module.exports = {
             const rs = await axiosInstance.get('/login', {data : req.body})
             console.log(rs.data.msg);
             if(rs.data.msg === 'success'){ 
-                res.redirect('/shop')
+                res.redirect('/product')
             } else {
                 res.render('signIn', {
                     type: 'danger',

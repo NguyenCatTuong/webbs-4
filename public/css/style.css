@@ -1,6 +1,6 @@
 .container.app {
     flex-direction: column;
-    height: 100vh;
+    /* height: 100vh; */
 }
 
 .body {
@@ -19,4 +19,14 @@ div.btn-submit {
 
 button.btn {
     width: 160px;
+}
+
+.category-form {
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-filter {
+    margin-top: 0 !important;
+    margin-left: 8px;
 }
