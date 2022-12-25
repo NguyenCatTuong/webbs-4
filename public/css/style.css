@@ -1,0 +1,22 @@
+.container.app {
+    flex-direction: column;
+    height: 100vh;
+}
+
+.body {
+    /* background-color: red; */
+    flex-shrink: 1;
+    height: 100%;
+}
+
+.auth-form {
+    width: 80%;
+}
+
+div.btn-submit {
+    justify-content: center;
+}
+
+button.btn {
+    width: 160px;
+}

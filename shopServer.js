@@ -35,22 +35,6 @@ app.get('/shop', async (req, res) => {
 //Db
 // connect();
 
-//test db
-// db.any('SELECT * FROM users')
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((err) => console.log(err)
-//   )
-
-// db.oneOrNone('INSERT INTO users (pass) VALUES ($1) RETURNING *', ['hihi2'])
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((err) => console.log(err)
-//   )
-
-
 app.listen(port, () => {
     console.log(`Example app listening on port http://localhost:${port}`)
 })
